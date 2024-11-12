@@ -1,14 +1,15 @@
 # court-booking-api
-> An API for a tennis club's website
+> An experimental API for booking tennis courts through browser automation
 
-This is an experimental API implementation for my tennis club's
-website for booking courts.  The website is normally only accessible
-through a traditional web browser.  This API implementation uses a
-headless chrome browser to interface with the website, and provides
-two API endpoints:
+`court-booking-api` is an experimental API implementation that
+automates interactions with a tennis club's website to book
+courts. The website typically requires a traditional web browser for
+access. This project uses a headless Chrome browser, controlled via
+Puppeteer, to interface with the website programmatically. It provides
+two main API endpoints:
 
 * `/api/v1/open-courts`: provide a list of available courts for a given day
-* `/api/v1/reserve-court`: reserve a specific court
+* `/api/v1/reserve-court`: reserve a court for a specific time
 
 I won't go into documenting these APIs, as I suspect they are only of
 interest to me.  I share this repo in the hopes that it would be of
