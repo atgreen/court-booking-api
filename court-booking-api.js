@@ -172,9 +172,7 @@ async function extractOpenCourts(page) {
             const isOpen = await cell.evaluate((cell) => cell.classList.contains('open'));
             if (isOpen) {
                 // Use cellIndex to get the court number
-                const courtNumber = await cell.evaluate((cell) => cell.cellIndex);
-                // Add 1 if court numbers start from 1 instead of 0
-                const court = courtNumber; // Adjust if necessary
+                const court = await cell.evaluate((cell) => cell.cellIndex);
                 const time = await cell.$eval('div', (div) => div.getAttribute('data-start-time') || '');
                 courtsData.push({ court: court, time });
             }
