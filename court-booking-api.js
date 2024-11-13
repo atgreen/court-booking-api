@@ -363,7 +363,7 @@ async function confirmBooking(page) {
     });
 
     if (restrictionExists) {
-	      throw new Error('Booking failed due to restriction.');
+	      throw new Error('Booking restricted');
     }
 
     console.log('Booking confirmed successfully.');
@@ -409,32 +409,22 @@ app.post('/api/v1/reserve-court', async (req, res) => {
     }
 
     const { day, courtNumber, startTime, partnerName, partnerMembershipNumber } = value;
-
-    const browser = await puppeteer.launch({ headless: true }); // Use headless: false for debugging
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
     try {
         await login(page);
-        await retry(async () => {
-            const result = await reserveCourt(
-                page,
-                day,
-                courtNumber,
-                startTime,
-                partnerName,
-                partnerMembershipNumber
-            );
-
-            res.send({ success: true, message: result });
-        }, {
-            retries: 3,
-            onRetry: (err) => {
-                console.warn('Reserving court failed, retrying...', err);
-            },
-        });
+        const result = await reserveCourt(page, day, courtNumber, startTime, partnerName, partnerMembershipNumber);
+        res.send({ success: true, message: result });
     } catch (error) {
         console.error('An error occurred:', error);
-        res.status(500).send({ success: false, error: error.message });
+        if (error.message.includes('Booking restricted')) {
+            // Specific response for restriction errors
+            res.status(403).send({ success: false, error: 'Booking restricted due to club policy.' });
+        } else {
+            // General error response for other errors
+            res.status(500).send({ success: false, error: 'An error occurred while reserving the court.' });
+        }
     } finally {
         await browser.close();
     }
