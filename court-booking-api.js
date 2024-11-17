@@ -209,8 +209,11 @@ app.get('/api/v1/open-courts', async (req, res) => {
     if (!validateDay(dayOfWeek)) {
         return res.status(400).send({ error: 'Day must be within the next 4 days' });
     }
-
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true,
+                                             args: [
+                                                 '--no-sandbox',
+                                                 '--disable-setuid-sandbox'
+                                             ]});
     const page = await browser.newPage();
 
     try {
@@ -409,7 +412,11 @@ app.post('/api/v1/reserve-court', async (req, res) => {
     }
 
     const { day, courtNumber, startTime, partnerName, partnerMembershipNumber } = value;
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true,
+                                             args: [
+                                                 '--no-sandbox',
+                                                 '--disable-setuid-sandbox'
+                                             ]});
     const page = await browser.newPage();
 
     try {
